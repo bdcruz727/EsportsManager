@@ -16,7 +16,7 @@ public class GameInitializer : MonoBehaviour
         // Macro, Laning, Mechanics, Fighting, Personality, Champions
         PlayerData Doran = CreatePlayer(gameState, "doran", "Doran", PlayerData.Role.Top, 25, "t1",
             PlayerData.PotentialTier.Superstar, PlayerData.PotentialLikelihood.Exact,
-            94, 91, 90, 91, 88, 88);
+            95, 93, 91, 92, 90, 90);
 
         PlayerData Oner = CreatePlayer(gameState, "oner", "Oner", PlayerData.Role.Jungle, 23, "t1",
             PlayerData.PotentialTier.Generational, PlayerData.PotentialLikelihood.Medium,
@@ -27,7 +27,7 @@ public class GameInitializer : MonoBehaviour
             99, 92, 86, 90, 99, 97);
 
         PlayerData Peyz = CreatePlayer(gameState, "peyz", "Peyz", PlayerData.Role.Bottom, 20, "t1",
-            PlayerData.PotentialTier.Franchise, PlayerData.PotentialLikelihood.Low,
+            PlayerData.PotentialTier.Franchise, PlayerData.PotentialLikelihood.Medium,
             88, 92, 95, 92, 86, 88);
 
         PlayerData Keria = CreatePlayer(gameState, "keria", "Keria", PlayerData.Role.Support, 23, "t1",
@@ -54,7 +54,7 @@ public class GameInitializer : MonoBehaviour
 
         PlayerData Zeka = CreatePlayer(gameState, "zeka", "Zeka", PlayerData.Role.Middle, 23, "hle",
             PlayerData.PotentialTier.Superstar, PlayerData.PotentialLikelihood.High,
-            89, 92, 94, 92, 87, 89);
+            91, 93, 95, 93, 89, 90);
 
         PlayerData Gumayusi = CreatePlayer(gameState, "gumayusi", "Gumayusi", PlayerData.Role.Bottom, 23, "hle",
             PlayerData.PotentialTier.Franchise, PlayerData.PotentialLikelihood.Medium,
@@ -62,7 +62,7 @@ public class GameInitializer : MonoBehaviour
 
         PlayerData Delight = CreatePlayer(gameState, "delight", "Delight", PlayerData.Role.Support, 23, "hle",
             PlayerData.PotentialTier.Superstar, PlayerData.PotentialLikelihood.Medium,
-            91, 88, 89, 90, 88, 89);
+            94, 92, 89, 91, 91, 90);
 
 
         List<PlayerData> HLEPlayers = new List<PlayerData>
@@ -71,6 +71,78 @@ public class GameInitializer : MonoBehaviour
         };
 
         TeamData HLE = CreateTeam(gameState, "hle", "Hanwha Life Esports", "HLE", HLEPlayers);
+
+
+        // Gen.G Creation
+        // Macro, Laning, Mechanics, Fighting, Personality, Champions
+        PlayerData Kiin = CreatePlayer(gameState, "kiin", "Kiin", PlayerData.Role.Top, 26, "geng",
+            PlayerData.PotentialTier.Franchise, PlayerData.PotentialLikelihood.Exact,
+            95, 95, 94, 93, 92, 94);
+
+        PlayerData Canyon = CreatePlayer(gameState, "canyon", "Canyon", PlayerData.Role.Jungle, 24, "geng",
+            PlayerData.PotentialTier.Generational, PlayerData.PotentialLikelihood.Exact,
+            96, 93, 96, 96, 92, 94);
+
+        PlayerData Chovy = CreatePlayer(gameState, "chovy", "Chovy", PlayerData.Role.Middle, 24, "geng",
+            PlayerData.PotentialTier.Generational, PlayerData.PotentialLikelihood.Exact,
+            97, 99, 98, 96, 88, 97);
+
+        PlayerData Ruler = CreatePlayer(gameState, "ruler", "Ruler", PlayerData.Role.Bottom, 27, "geng",
+            PlayerData.PotentialTier.Franchise, PlayerData.PotentialLikelihood.Exact,
+            96, 94, 95, 95, 92, 92);
+
+        PlayerData Duro = CreatePlayer(gameState, "duro", "Duro", PlayerData.Role.Support, 23, "geng",
+            PlayerData.PotentialTier.Superstar, PlayerData.PotentialLikelihood.Medium,
+            93, 91, 91, 90, 89, 92);
+
+
+        List<PlayerData> GENPlayers = new List<PlayerData>
+        {
+            Kiin, Canyon, Chovy, Ruler, Duro
+        };
+
+        TeamData GEN = CreateTeam(gameState, "geng", "Gen.G", "GEN", GENPlayers);
+
+
+        // KT Creation
+        // Macro, Laning, Mechanics, Fighting, Personality, Champions
+        PlayerData PerfecT = CreatePlayer(gameState, "perfect", "PerfecT", PlayerData.Role.Top, 21, "kt",
+            PlayerData.PotentialTier.Starter, PlayerData.PotentialLikelihood.Medium,
+            85, 87, 86, 85, 86, 85);
+
+        PlayerData Cuzz = CreatePlayer(gameState, "cuzz", "Cuzz", PlayerData.Role.Jungle, 26, "kt",
+            PlayerData.PotentialTier.Superstar, PlayerData.PotentialLikelihood.Exact,
+            89, 85, 87, 88, 89, 88);
+
+        PlayerData Bdd = CreatePlayer(gameState, "bdd", "Bdd", PlayerData.Role.Middle, 26, "kt",
+            PlayerData.PotentialTier.Franchise, PlayerData.PotentialLikelihood.Exact,
+            94, 93, 94, 91, 96, 93);
+
+        PlayerData Aiming = CreatePlayer(gameState, "aiming", "Aiming", PlayerData.Role.Bottom, 25, "kt",
+            PlayerData.PotentialTier.Superstar, PlayerData.PotentialLikelihood.Exact,
+            88, 91, 92, 91, 86, 89);
+
+        PlayerData Ghost = CreatePlayer(gameState, "ghost", "Ghost", PlayerData.Role.Support, 26, "kt",
+            PlayerData.PotentialTier.Starter, PlayerData.PotentialLikelihood.Exact,
+            87, 82, 80, 85, 92, 80);
+
+        PlayerData Pollu = CreatePlayer(gameState, "pollu", "Pollu", PlayerData.Role.Support, 20, "kt",
+            PlayerData.PotentialTier.Depth, PlayerData.PotentialLikelihood.Medium,
+            82, 81, 83, 81, 80, 79);
+
+
+        List<PlayerData> KTPlayers = new List<PlayerData>
+        {
+            PerfecT, Cuzz, Bdd, Aiming, Ghost, Pollu
+        };
+
+        TeamData KT = CreateTeam(gameState, "kt", "KT Rolster", "KT", KTPlayers);
+
+
+
+
+
+
 
         // To Access A Player
         // PlayerData midPlayer = gameState.AllPlayers["playerID"];
