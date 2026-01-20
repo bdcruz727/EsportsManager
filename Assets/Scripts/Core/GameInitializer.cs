@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static PlayerData;
 using static TeamData;
+using static MatchSimulator;
 
 
 public class GameInitializer : MonoBehaviour
@@ -149,6 +150,9 @@ public class GameInitializer : MonoBehaviour
         // midPlayer.Mechanics += 1;
 
         //return gameState;
+
+
+        // DEBUGGING
         foreach (var team in gameState.AllTeams.Values) { 
             Debug.Log($" Team Name: {team.TeamName}");
             Debug.Log($" Players:");
@@ -159,6 +163,16 @@ public class GameInitializer : MonoBehaviour
             }
         }
 
+        MatchSimulator matchSimulator = new MatchSimulator();
+
+        for (int i = 0; i < 5; i++)
+        {
+            Debug.Log($"Game {i + 1}:");
+            double chovyScore = matchSimulator.CalculateFinalPlayerPerfomance(Chovy, GameData.GameType.SeasonPlayInR1, false);
+            double fakerScore = matchSimulator.CalculateFinalPlayerPerfomance(Faker, GameData.GameType.SeasonPlayInR1, false);
+            Debug.Log($"Chovy: {chovyScore}");
+            Debug.Log($"Faker: {fakerScore}");
+        }
       
     }
 

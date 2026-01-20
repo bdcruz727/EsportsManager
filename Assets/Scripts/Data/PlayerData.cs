@@ -58,13 +58,9 @@ public class PlayerData
     // Overall
     public double Overall;
 
-
-
-    public static double CalculatePlayerOverall(double[] stats, Role playerRole)
+    public static double[] GetRoleWeights(Role playerRole)
     {
-        double Overall = 0;
-        double[] weights = { 0.20, 0.20, 0.20, 0.20, 0.10, 0.10 };
-        // Macro, Laning, Mechanics, Fighting, Personality, Champions
+        double[] weights = new double[6];
         switch (playerRole)
         {
             case Role.Top:
@@ -112,8 +108,14 @@ public class PlayerData
                 weights[5] = 0.15; // Champions
                 break;
         }
-        
+        return weights;
+    }
 
+    public static double CalculatePlayerOverall(double[] stats, Role playerRole)
+    {
+        double Overall = 0;
+        double[] weights = GetRoleWeights(playerRole);
+      
         for(int i = 0; i < 6; i++)
         {
             Overall += stats[i] * weights[i];

@@ -12,6 +12,7 @@ public class TeamData
 
     public List<string> PlayerIDs = new();
 
+    public int Ranking;
     public int SeriesWins;
     public int SeriesLosses;
     public int Points;
