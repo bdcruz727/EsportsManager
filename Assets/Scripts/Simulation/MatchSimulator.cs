@@ -27,6 +27,8 @@ public class MatchSimulator
         series.gameType = gameType;
         series.maxGames = seriesLength;
         series.winsNeeded = winsNeeded;
+        series.seriesGames = new();
+        series.winningTeamPerGame = new();
 
 
         while (team1Wins < winsNeeded && team2Wins < winsNeeded)
@@ -45,6 +47,7 @@ public class MatchSimulator
             Debug.Log($"=== Simulating Game {gamesPlayed + 1} ===");
             GameData currentGame = SimulateGame(gameState, team1, team2, gameType, team1FacingElimination, team2FacingElimination);
             Debug.Log($"Game Winner: {currentGame.gameWinner.TeamTag}");
+            series.winningTeamPerGame.Add(currentGame.gameWinner);
             if (currentGame.gameWinner.TeamID == team1.TeamID)
             {
                 team1Wins++;
@@ -53,6 +56,8 @@ public class MatchSimulator
             {
                 team2Wins++;
             }
+
+            series.seriesGames.Add(currentGame);
             gamesPlayed++;
 
         }
@@ -61,11 +66,15 @@ public class MatchSimulator
         {
             series.seriesWinner = team1;
             series.seriesLoser = team2;
+            team1.SeriesWins++;
+            team2.SeriesLosses++;
         }
         else
         {
             series.seriesWinner = team2;
             series.seriesLoser = team1;
+            team2.SeriesWins++;
+            team1.SeriesLosses++;
         }
 
         series.team1Wins = team1Wins;
@@ -75,6 +84,14 @@ public class MatchSimulator
 
         Debug.Log($"Series Winner: {series.seriesWinner.TeamTag}");
         Debug.Log($"{team1.TeamTag}: {series.team1Wins} | {team2.TeamTag}: {series.team2Wins}");
+        Debug.Log($"Winner by Game:");
+        int index = 1;
+        foreach (var game in series.seriesGames)
+        {
+            Debug.Log($"Game {index}: {game.gameWinner.TeamTag}");
+            index++;
+        }
+
         return series;
     }
 
@@ -87,6 +104,29 @@ public class MatchSimulator
 
         double totalPerformance = team1TotalPerformance + team2TotalPerformance;
 
+        double performanceDifference = team1TotalPerformance - team2TotalPerformance;
+        double team1WinChance = 0.5 + performanceDifference * 0.008; //Change last value to change win increase per point difference
+        Mathf.Clamp((float)team1WinChance, 0.05f, 0.95f);
+
+        double gameRoll = CalculateGameRoll();
+
+        if (gameRoll <= team1WinChance)
+        {
+            game.gameWinner = team1;
+            game.gameLoser = team2;
+            team1.GameWins++;
+            team2.GameLosses++;
+        }
+        else
+        {
+            game.gameWinner = team2;
+            game.gameLoser = team1;
+            team2.GameWins++;
+            team1.GameLosses++;
+        }
+
+
+        /*
         double team1WinChance = team1TotalPerformance / totalPerformance;
         double team2WinChance = 1.0 - team1WinChance;
 
@@ -103,23 +143,24 @@ public class MatchSimulator
             winningTeam = team2;
             losingTeam = team1;
         }
+        */
 
         Debug.Log($"{team1.TeamTag} Performance: {team1TotalPerformance}");
         Debug.Log($"{team2.TeamTag} Performance: {team2TotalPerformance}");
         Debug.Log($"{team1.TeamTag} Win Chance: {team1WinChance * 100:F2}%");
-        Debug.Log($"{team2.TeamTag} Win Chance: {team2WinChance * 100:F2}%");
+        Debug.Log($"{team2.TeamTag} Win Chance: {(1-team1WinChance) * 100:F2}%");
 
         Debug.Log($"Total Performance: {totalPerformance}");
         Debug.Log($"Game Roll: {gameRoll}");
+        
 
         game.team1 = team1;
         game.team2 = team2;
         game.gameType = gameType;
 
-        game.gameWinner = winningTeam;
-        game.gameLoser = losingTeam;
+        //game.gameWinner = winningTeam;
+        //game.gameLoser = losingTeam;
         //game.gameMVP = gameState.AllPlayers[game.gameWinner.startingRosterIDs[0]];
-
 
 
         return game;
@@ -127,12 +168,7 @@ public class MatchSimulator
 
     private double CalculateGameRoll()
     {
-        
-        double role1 = UnityEngine.Random.Range(0, 100);
-        double role2 = UnityEngine.Random.Range(0, 100);
-        double role3 = UnityEngine.Random.Range(0, 100);
-
-        return (role1 + role2 + role3) / 3;
+        return UnityEngine.Random.value;
     }
 
     private double CalculateTeamPerformance(GameState gameState, TeamData team, GameType gameType, bool isFacingElimination) {
@@ -176,7 +212,7 @@ public class MatchSimulator
             pressure = basePressure;
   
         }
-        pressure = Mathf.Min(Convert.ToSingle(pressure), Convert.ToSingle(1.0));
+        pressure = Mathf.Min((float)pressure, 1.0f);
         return pressure;
     }
 
@@ -189,7 +225,7 @@ public class MatchSimulator
             effectivePressure *= 1.15;
             // May add changes to pressure based on traits (i.e clutch or choker)
         }
-        double personalPressure = 1.0 + ((player.Personality - 95) / 175) * effectivePressure;
+        double personalPressure = 1.0 + ((player.Personality - 95) / 100) * effectivePressure;
         
 
         return personalPressure;

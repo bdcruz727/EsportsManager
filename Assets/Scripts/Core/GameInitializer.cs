@@ -78,7 +78,7 @@ public class GameInitializer : MonoBehaviour
         // Macro, Laning, Mechanics, Fighting, Personality, Champions
         PlayerData Kiin = CreatePlayer(gameState, "kiin", "Kiin", PlayerData.Role.Top, 26, "geng",
             PlayerData.PotentialTier.Franchise, PlayerData.PotentialLikelihood.Exact,
-            95, 95, 94, 93, 92, 94);
+            96, 96, 95, 95, 92, 95);
 
         PlayerData Canyon = CreatePlayer(gameState, "canyon", "Canyon", PlayerData.Role.Jungle, 24, "geng",
             PlayerData.PotentialTier.Generational, PlayerData.PotentialLikelihood.Exact,
@@ -86,15 +86,15 @@ public class GameInitializer : MonoBehaviour
 
         PlayerData Chovy = CreatePlayer(gameState, "chovy", "Chovy", PlayerData.Role.Middle, 24, "geng",
             PlayerData.PotentialTier.Generational, PlayerData.PotentialLikelihood.Exact,
-            97, 99, 98, 96, 88, 97);
+            98, 99, 98, 97, 88, 97);
 
         PlayerData Ruler = CreatePlayer(gameState, "ruler", "Ruler", PlayerData.Role.Bottom, 27, "geng",
             PlayerData.PotentialTier.Franchise, PlayerData.PotentialLikelihood.Exact,
-            96, 94, 95, 95, 92, 92);
+            97, 95, 96, 95, 92, 92);
 
         PlayerData Duro = CreatePlayer(gameState, "duro", "Duro", PlayerData.Role.Support, 23, "geng",
             PlayerData.PotentialTier.Superstar, PlayerData.PotentialLikelihood.Medium,
-            93, 91, 91, 90, 89, 92);
+            94, 92, 91, 94, 89, 92);
 
 
         List<PlayerData> GENPlayers = new List<PlayerData>
@@ -153,7 +153,7 @@ public class GameInitializer : MonoBehaviour
 
 
         // DEBUGGING
-        foreach (var team in gameState.AllTeams.Values) { 
+        foreach (var team in gameState.AllTeams.Values) {
             Debug.Log($" Team Name: {team.TeamName}");
             Debug.Log($" Players:");
             foreach (var id in team.PlayerIDs)
@@ -190,7 +190,32 @@ public class GameInitializer : MonoBehaviour
         }
         */
 
-        _ = matchSimulator.SimulateSeries(gameState, GEN, KT, GameData.GameType.SeasonPlayoffsFinals);
+        SeriesData s1 = matchSimulator.SimulateSeries(gameState, GEN, T1, GameData.GameType.SeasonPlayoffsFinals);
+        SeriesData s2 = matchSimulator.SimulateSeries(gameState, GEN, T1, GameData.GameType.SeasonPlayoffsFinals);
+        SeriesData s3 = matchSimulator.SimulateSeries(gameState, GEN, T1, GameData.GameType.SeasonPlayoffsFinals);
+        SeriesData s4 = matchSimulator.SimulateSeries(gameState, GEN, T1, GameData.GameType.SeasonPlayoffsFinals);
+        SeriesData s5 = matchSimulator.SimulateSeries(gameState, GEN, T1, GameData.GameType.SeasonPlayoffsFinals);
+        SeriesData s6 = matchSimulator.SimulateSeries(gameState, GEN, T1, GameData.GameType.SeasonPlayoffsFinals);
+        SeriesData s7 = matchSimulator.SimulateSeries(gameState, GEN, T1, GameData.GameType.SeasonPlayoffsFinals);
+        SeriesData s8 = matchSimulator.SimulateSeries(gameState, GEN, T1, GameData.GameType.SeasonPlayoffsFinals);
+        SeriesData s9 = matchSimulator.SimulateSeries(gameState, GEN, T1, GameData.GameType.SeasonPlayoffsFinals);
+        SeriesData s10 = matchSimulator.SimulateSeries(gameState, GEN, T1, GameData.GameType.SeasonPlayoffsFinals);
+
+
+        SeriesData[] allSeries = { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10 };
+
+        for (int i = 0; i < allSeries.Length; i++)
+        {
+            Debug.Log($"Series {i + 1} Winner: {allSeries[i].seriesWinner.TeamTag}");
+        }
+
+        Debug.Log("GEN Record");
+        Debug.Log($"Series: {GEN.SeriesWins} - {GEN.SeriesLosses} | Games: {GEN.GameWins} - {GEN.GameLosses}");
+
+        Debug.Log("T1 Record");
+        Debug.Log($"Series: {T1.SeriesWins} - {T1.SeriesLosses} | Games: {T1.GameWins} - {T1.GameLosses}");
+
+
 
     }
 

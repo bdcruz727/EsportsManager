@@ -56,8 +56,8 @@ public class GameData
         { GameType.CupFinals,        0.90 },
 
         // Regular Season
-        { GameType.Rounds12,        0.15 },
-        { GameType.Rounds34,        0.25 },
+        { GameType.Rounds12,        0.10 },
+        { GameType.Rounds34,        0.20 },
 
         // Road to MSI
         { GameType.RoadToMSIR1,      0.45 },
