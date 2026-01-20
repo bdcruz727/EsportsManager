@@ -12,6 +12,8 @@ public class TeamData
 
     public List<string> PlayerIDs = new();
 
+    public List<string> startingRosterIDs = new();
+
     public int Ranking;
     public int SeriesWins;
     public int SeriesLosses;
@@ -37,6 +39,10 @@ public class TeamData
         foreach (PlayerData player in players)
         {
             team.PlayerIDs.Add(player.PlayerID);
+            if (team.startingRosterIDs.Count < 5)
+            {
+                team.startingRosterIDs.Add(player.PlayerID);
+            }  
             player.CurrentTeamID = team.TeamID;
         }
 

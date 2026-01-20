@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 using static GameData;
 
@@ -17,5 +19,6 @@ public class SeriesData
     public int totalGamesPlayed;
 
     // Array of Length 5, 1 indicates victory for team 1, 2 for team 2, 0 for no game
-    public int[] seriesHistory = new int[5];
+    public int[] seriesOutcomes = new int[5];
+    public List<SeriesData> seriesGames;
 }

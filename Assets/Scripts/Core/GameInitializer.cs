@@ -165,15 +165,33 @@ public class GameInitializer : MonoBehaviour
 
         MatchSimulator matchSimulator = new MatchSimulator();
 
+        /*
         for (int i = 0; i < 5; i++)
         {
             Debug.Log($"Game {i + 1}:");
-            double chovyScore = matchSimulator.CalculateFinalPlayerPerfomance(Chovy, GameData.GameType.SeasonPlayInR1, false);
-            double fakerScore = matchSimulator.CalculateFinalPlayerPerfomance(Faker, GameData.GameType.SeasonPlayInR1, false);
-            Debug.Log($"Chovy: {chovyScore}");
-            Debug.Log($"Faker: {fakerScore}");
+            // double chovyScore = matchSimulator.CalculateFinalPlayerPerfomance(Chovy, GameData.GameType.SeasonPlayoffsFinals, true);
+            double doranScore = matchSimulator.CalculateFinalPlayerPerfomance(Doran, GameData.GameType.SeasonPlayoffsFinals, true);
+            double onerScore = matchSimulator.CalculateFinalPlayerPerfomance(Oner, GameData.GameType.SeasonPlayoffsFinals, true);
+            double fakerScore = matchSimulator.CalculateFinalPlayerPerfomance(Faker, GameData.GameType.SeasonPlayoffsFinals, true);
+            double peyzScore = matchSimulator.CalculateFinalPlayerPerfomance(Peyz, GameData.GameType.SeasonPlayoffsFinals, true);
+            double keriaScore = matchSimulator.CalculateFinalPlayerPerfomance(Keria, GameData.GameType.SeasonPlayoffsFinals, true);
+
+            double perfectScore = matchSimulator.CalculateFinalPlayerPerfomance(PerfecT, GameData.GameType.SeasonPlayoffsFinals, true);
+            double cuzzScore = matchSimulator.CalculateFinalPlayerPerfomance(Cuzz, GameData.GameType.SeasonPlayoffsFinals, true);
+            double bddScore = matchSimulator.CalculateFinalPlayerPerfomance(Bdd, GameData.GameType.SeasonPlayoffsFinals, true);
+            double aimingScore = matchSimulator.CalculateFinalPlayerPerfomance(Aiming, GameData.GameType.SeasonPlayoffsFinals, true);
+            double ghostScore = matchSimulator.CalculateFinalPlayerPerfomance(Ghost, GameData.GameType.SeasonPlayoffsFinals, true);
+
+            Debug.Log($"Doran {doranScore} | {perfectScore} PerfecT");
+            Debug.Log($"Oner {onerScore} | {cuzzScore} Cuzz");
+            Debug.Log($"Faker {fakerScore} | {bddScore} Bdd");
+            Debug.Log($"Peyz {peyzScore} | {aimingScore} Aiming");
+            Debug.Log($"Keria {keriaScore} | {ghostScore} Ghost");
         }
-      
+        */
+
+        _ = matchSimulator.SimulateSeries(gameState, GEN, KT, GameData.GameType.SeasonPlayoffsFinals);
+
     }
 
 

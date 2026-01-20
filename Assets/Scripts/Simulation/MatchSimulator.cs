@@ -8,14 +8,149 @@ using System;
 
 public class MatchSimulator
 {
-    public static SeriesData SimulateGame(GameState gameState, TeamData team1, TeamData team2, GameType gameType)
+    public SeriesData SimulateSeries(GameState gameState, TeamData team1, TeamData team2, GameType gameType)
     {
         SeriesData series = new SeriesData();
-        
+        maxGames.TryGetValue(gameType, out int seriesLength);
+        int winsNeeded = 2;
+        if (seriesLength == 5)
+        {
+            winsNeeded = 3;
+        }
+
+        int team1Wins = 0;
+        int team2Wins = 0;
+        int gamesPlayed = 0;
+
+        series.team1 = team1;
+        series.team2 = team2;
+        series.gameType = gameType;
+        series.maxGames = seriesLength;
+        series.winsNeeded = winsNeeded;
 
 
+        while (team1Wins < winsNeeded && team2Wins < winsNeeded)
+        {
+            bool team1FacingElimination = false;
+            bool team2FacingElimination = false;
+            if (team1Wins == winsNeeded - 1)
+            {
+                team2FacingElimination = true;
+            }
+            if (team2Wins == winsNeeded - 1)
+            {
+                team1FacingElimination = true;
+            }
+
+            Debug.Log($"=== Simulating Game {gamesPlayed + 1} ===");
+            GameData currentGame = SimulateGame(gameState, team1, team2, gameType, team1FacingElimination, team2FacingElimination);
+            Debug.Log($"Game Winner: {currentGame.gameWinner.TeamTag}");
+            if (currentGame.gameWinner.TeamID == team1.TeamID)
+            {
+                team1Wins++;
+            }
+            else
+            {
+                team2Wins++;
+            }
+            gamesPlayed++;
+
+        }
+
+        if (team1Wins == winsNeeded)
+        {
+            series.seriesWinner = team1;
+            series.seriesLoser = team2;
+        }
+        else
+        {
+            series.seriesWinner = team2;
+            series.seriesLoser = team1;
+        }
+
+        series.team1Wins = team1Wins;
+        series.team2Wins = team2Wins;
+
+        series.totalGamesPlayed = gamesPlayed;
+
+        Debug.Log($"Series Winner: {series.seriesWinner.TeamTag}");
+        Debug.Log($"{team1.TeamTag}: {series.team1Wins} | {team2.TeamTag}: {series.team2Wins}");
         return series;
     }
+
+    private GameData SimulateGame(GameState gameState, TeamData team1, TeamData team2, GameType gameType, bool team1FacingElimination, bool team2FacingElimination)
+    {
+        GameData game = new GameData();
+
+        double team1TotalPerformance = CalculateTeamPerformance(gameState, team1, gameType, team1FacingElimination);
+        double team2TotalPerformance = CalculateTeamPerformance(gameState, team2, gameType, team2FacingElimination);
+
+        double totalPerformance = team1TotalPerformance + team2TotalPerformance;
+
+        double team1WinChance = team1TotalPerformance / totalPerformance;
+        double team2WinChance = 1.0 - team1WinChance;
+
+        double gameRoll = CalculateGameRoll();
+
+        //Debug.Log($"{team1.TeamTag} Win double: {team1WinChance}");
+        //Debug.Log($"{team2.TeamTag} Win double: {team2WinChance}");
+
+        TeamData winningTeam = team1;
+        TeamData losingTeam = team2;
+
+        if (gameRoll > team1WinChance * 100)
+        {
+            winningTeam = team2;
+            losingTeam = team1;
+        }
+
+        Debug.Log($"{team1.TeamTag} Performance: {team1TotalPerformance}");
+        Debug.Log($"{team2.TeamTag} Performance: {team2TotalPerformance}");
+        Debug.Log($"{team1.TeamTag} Win Chance: {team1WinChance * 100:F2}%");
+        Debug.Log($"{team2.TeamTag} Win Chance: {team2WinChance * 100:F2}%");
+
+        Debug.Log($"Total Performance: {totalPerformance}");
+        Debug.Log($"Game Roll: {gameRoll}");
+
+        game.team1 = team1;
+        game.team2 = team2;
+        game.gameType = gameType;
+
+        game.gameWinner = winningTeam;
+        game.gameLoser = losingTeam;
+        //game.gameMVP = gameState.AllPlayers[game.gameWinner.startingRosterIDs[0]];
+
+
+
+        return game;
+    }
+
+    private double CalculateGameRoll()
+    {
+        
+        double role1 = UnityEngine.Random.Range(0, 100);
+        double role2 = UnityEngine.Random.Range(0, 100);
+        double role3 = UnityEngine.Random.Range(0, 100);
+
+        return (role1 + role2 + role3) / 3;
+    }
+
+    private double CalculateTeamPerformance(GameState gameState, TeamData team, GameType gameType, bool isFacingElimination) {
+        double total = 0;
+        Debug.Log($"= {team.TeamTag} Performance =");
+        foreach (var playerID in team.startingRosterIDs)
+        {
+            PlayerData player = gameState.AllPlayers[playerID];
+            double performance = CalculateFinalPlayerPerfomance(player, gameType, isFacingElimination);
+            Debug.Log($"{player.PlayerName} Performance: {performance}");
+            total += performance;
+        }
+
+        return total;
+    }
+
+
+    
 
     // Takes a player and outputs their raw performance based on their stats
     private double CalculateBasePlayerPerformance(PlayerData player)
@@ -33,46 +168,51 @@ public class MatchSimulator
         return sum;
     }
 
-    // Takes a gameType and calculates the pressure (for that team)
-    private double CalculateGamePressure(GameType gameType, bool isFacingElimination)
+    // Takes a gameType and calculates the pressure (team wide)
+    private double CalculateGamePressure(GameType gameType)
     {
         double pressure = 0.15;
-        double basePressure = 0.0;
-        if (BasePressure.TryGetValue(gameType, out basePressure)) {
+        if (BasePressure.TryGetValue(gameType, out double basePressure)) {
             pressure = basePressure;
-            if (isFacingElimination)
-            {
-                pressure = basePressure + (1 - basePressure) * 1.15;
-            }
+  
         }
         pressure = Mathf.Min(Convert.ToSingle(pressure), Convert.ToSingle(1.0));
         return pressure;
     }
 
-    // Calculates the Pressure modifier based on personality
-    private double CalculatePersonalPressureModifier(PlayerData player, double pressure)
+    // Calculates the Pressure modifier based on an individual's personality and if elimination game
+    private double CalculatePersonalPressureModifier(PlayerData player, double pressure, bool isFacingElimination)
     {
-        return 1.0 + ((player.Personality - 94) / 100) * pressure;
+        double effectivePressure = pressure;
+        if (isFacingElimination)
+        {
+            effectivePressure *= 1.15;
+            // May add changes to pressure based on traits (i.e clutch or choker)
+        }
+        double personalPressure = 1.0 + ((player.Personality - 95) / 175) * effectivePressure;
+        
+
+        return personalPressure;
     } 
 
-    private double GetRoleVariance(PlayerData.Role role)
+    private double GetRoleVariance(Role role)
     {
         switch (role)
         {
             case Role.Top:
-                return UnityEngine.Random.Range(0.94f, 1.06f);
+                return UnityEngine.Random.Range(0.96f, 1.04f);
 
             case Role.Jungle:
-                return UnityEngine.Random.Range(0.93f, 1.07f);
+                return UnityEngine.Random.Range(0.95f, 1.05f);
 
             case Role.Middle:
-                return UnityEngine.Random.Range(0.92f, 1.08f);
+                return UnityEngine.Random.Range(0.94f, 1.06f);
 
             case Role.Bottom:
-                return UnityEngine.Random.Range(0.90f, 1.10f);
+                return UnityEngine.Random.Range(0.92f, 1.08f);
 
             case Role.Support:
-                return UnityEngine.Random.Range(0.96f, 1.04f);
+                return UnityEngine.Random.Range(0.98f, 1.02f);
             default:
                 break;
         }
@@ -82,13 +222,16 @@ public class MatchSimulator
     // Calculates the final performance of a player from their base, pressure, personality etc.
     public double CalculateFinalPlayerPerfomance(PlayerData player, GameType gameType, bool isFacingElimination) { 
         double basePerformance = CalculateBasePlayerPerformance(player);
-        double basePressure = CalculateGamePressure(gameType, isFacingElimination);
-        double personalPressureModifier = CalculatePersonalPressureModifier(player, basePressure);
+        double basePressure = CalculateGamePressure(gameType);
+        double personalPressureModifier = CalculatePersonalPressureModifier(player, basePressure, isFacingElimination);
         double roleVariance = GetRoleVariance(player.PlayerRole);
-
+        //double pressurePerformance = Mathf.Round(Convert.ToSingle(basePerformance * personalPressureModifier));
+        //double prePressurePerformance = Mathf.Round(Convert.ToSingle(basePerformance));
+        
         double finalPerformance = Mathf.Round(Convert.ToSingle(basePerformance * personalPressureModifier * roleVariance));
+        //Debug.Log($"Pre Pressure Performance - {player.PlayerName}: {prePressurePerformance}");
+        //Debug.Log($"Pre Variance Performance - {player.PlayerName}: {pressurePerformance}");
 
-        //Debug.Log($"{player.PlayerName}: {finalPerformance}");
         return finalPerformance;
     }
 }
